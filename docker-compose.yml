@@ -1,0 +1,34 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:latest
+    environment:
+      POSTGRES_PASSWORD: "password"
+      POSTGRES_HOST_AUTH_METHOD: "trust"
+    volumes:
+      - ./database_teste.sql:/docker-entrypoint-initdb.d/
+    ports:
+      - 5432:5432
+
+  jboss-service:
+    image: jboss/wildfly:latest
+    build: ./
+    ports:
+      - "9990:9990"   # Management port
+      - "9993:9993"   # HTTPS Management port
+      - "1099:1099"   # JNDI port
+      - "5445:5445"   # Messaging SSL port
+      - "5446:5446"   # Messaging non-SSL port
+      - "4712:4712"   # Transaction Recovery Environment port
+      - "3528:3528"   # IIOP (CORBA) port
+      - "4447:4447"   # Remote Naming port
+
+  tomcat-service:
+   image: tomcat:latest
+   build: ./
+   ports:
+     - "8080:8080"   # HTTP port
+     - "8443:8443"   # HTTPS port
+     - "8009:8009"   # AJP port
+     - "8005:8005"   # Shutdown port
