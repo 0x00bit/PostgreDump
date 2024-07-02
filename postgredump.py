@@ -12,7 +12,7 @@ class Manager():
         self.DUMP_DIR = '.'
         # File name
         self.DUMP_FILE = 'dump_database_teste.sql'
-        self.DUMP_PATH = os.path.join(DUMP_DIR, DUMP_FILE) 
+        self.DUMP_PATH = os.path.join(self.DUMP_DIR, self.DUMP_FILE) 
 
     # Connection with database
     def connect_db(self):
@@ -39,7 +39,7 @@ class Manager():
         # Printing a formatted table
         print(tabulate(self.dump, headers=["ID", "NOME", "CPF", "Nascimento",
                                            "Telefone"], tablefmt="grid"))
-        self.dump_sql = f"COPY (SELECT * FROM pg_catalog.pg_tables WHERE schemaname != 'pg_catalog' AND schemaname != 'information_schema') TO '{DUMP_PATH}'"
+        self.dump_sql = f"COPY (SELECT * FROM pg_catalog.pg_tables WHERE schemaname != 'pg_catalog' AND schemaname != 'information_schema') TO '{self.DUMP_PATH}'"
         self.cursor.execute(self.dump_sql)
 
 
@@ -74,3 +74,6 @@ class Manager():
             pass
         else:
             print("Invalid option")
+
+teste = Manager()
+teste.menu()
