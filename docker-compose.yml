@@ -7,7 +7,7 @@ services:
       POSTGRES_PASSWORD: "password"
       POSTGRES_HOST_AUTH_METHOD: "trust"
     volumes:
-      - ./database_teste.sql:/docker-entrypoint-initdb.d/
+      - /home/alunopop/sec/PostgreDump/database_teste.sql:/docker-entrypoint-initdb.d/database_teste.sql
     ports:
       - 5432:5432
 
