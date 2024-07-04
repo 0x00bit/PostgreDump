@@ -1,0 +1,2 @@
+psycopg2==2.9.9
+docker==7.1.0
