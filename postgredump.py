@@ -2,6 +2,7 @@ import psycopg2
 from psycopg2 import sql
 import docker
 import subprocess
+import os
 
 
 class Manager():
@@ -76,9 +77,20 @@ class Manager():
         # payload to restore
         command = [
             "docker-compose", "exec", "-e", f"PGPASSWORD={self.password}", self.container_name,
-            "sh", "-c", f"psql -U '{self.user}' -d '{self.db_name}' -f '{self.input_file}'"
+            "sh", "-c", f"psql -U '{self.user}' -d '{self.db_name}' -f '/{self.input_file}'"
         ]
 
+        # payload to transfer backup file to docker
+        copy_command = f"docker-compose cp {self.input_file} {self.container_name}:/"
+
+        # transfering file to the docker 
+        try:
+            os.system(copy_command)
+            print("Arquivo de backup transferido para o servidor!")
+        except Exception as err:
+            print(f"Não foi possível transferir o arquivo de backup para o servidor! {err}")
+
+        # restoring database
         try:
             result = subprocess.run(command, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
             
@@ -102,7 +114,12 @@ class Manager():
             
             for container_name in container_names:
                 container = client.containers.get(container_name)
-                
+                stats = container.stats(stream=False)
+                print(f"Container: {container_name}")
+                print(f"Status: {container.status}")
+                print(f"ID: {container.id}")
+                print("\n")
+
                 if container.status == "running":
                     print(f"O contêiner '{container_name}' está rodando.")
                 else:
