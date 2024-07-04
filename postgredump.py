@@ -102,7 +102,12 @@ class Manager():
             
             for container_name in container_names:
                 container = client.containers.get(container_name)
-                
+                stats = container.stats(stream=False)
+                print(f"Container: {container_name}")
+                print(f"Status: {container.status}")
+                print(f"ID: {container.id}")
+                print("\n")
+
                 if container.status == "running":
                     print(f"O contêiner '{container_name}' está rodando.")
                 else:
